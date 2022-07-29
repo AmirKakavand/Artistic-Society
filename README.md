@@ -1,1 +1,1 @@
-# Server side of project
+# "May the force be with you!"
