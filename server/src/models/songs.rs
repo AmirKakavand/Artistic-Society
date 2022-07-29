@@ -11,8 +11,8 @@ pub struct Song {
     pub id: i32,
     pub name: String,
     pub location: String,
-    pub duration: i32,
     pub artist_id: i32,
+    pub duration: i32,
     pub genre: Option<String>,
 }
 
