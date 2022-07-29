@@ -3,9 +3,10 @@ use super::DatabaseResult;
 use super::PgConnection;
 use diesel::prelude::*;
 use diesel::result::Error;
+use serde::Serialize;
 
 /// represent database song table
-#[derive(Queryable)]
+#[derive(Queryable, Serialize)]
 pub struct Song {
     pub id: i32,
     pub name: String,
@@ -81,6 +82,20 @@ impl Song {
             Ok(song_vec) => DatabaseResult::Successful(song_vec),
             Err(err) => panic!("Error!, message: {}", err),
         }
+    }
+
+    /// returns a random song from database
+    pub fn get_random(conn: &mut PgConnection) -> Option<Song> {
+        use rand::seq::IteratorRandom;
+        let mut rng = rand::thread_rng();
+
+        let songs = Song::get_all(conn).unwrap();
+        if songs.is_empty() {
+            return None;
+        }
+        let index = (0..songs.len()).choose(&mut rng).unwrap();
+
+        Some(songs[index])
     }
 }
 

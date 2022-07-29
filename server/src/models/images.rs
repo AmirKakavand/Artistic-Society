@@ -3,9 +3,10 @@ use super::DatabaseResult;
 use super::PgConnection;
 use diesel::prelude::*;
 use diesel::result::Error;
+use serde::Serialize;
 
 /// represent database image table
-#[derive(Queryable)]
+#[derive(Queryable, Serialize)]
 pub struct Image {
     pub id: i32,
     pub name: Option<String>,
@@ -37,7 +38,7 @@ impl Image {
         }
     }
 
-    /// gets all songs from database
+    /// gets all images from database
     pub fn get_all(conn: &mut PgConnection) -> DatabaseResult<Vec<Image>> {
         match image::table.load::<Image>(conn) {
             Ok(song_vec) => DatabaseResult::Successful(song_vec),
@@ -71,7 +72,7 @@ impl Image {
             Err(err) => panic!("Error!, message: {}", err),
         }
     }
-    /// gets an artist's all songs
+    /// gets an artist's all images
     pub fn get_artist_images(
         conn: &mut PgConnection,
         artist_id: i32,
@@ -84,6 +85,20 @@ impl Image {
             Ok(image_vec) => DatabaseResult::Successful(image_vec),
             Err(err) => panic!("Error!, message: {}", err),
         }
+    }
+
+    /// returns a random unage from database
+    pub fn get_random(conn: &mut PgConnection) -> Option<Image> {
+        use rand::seq::IteratorRandom;
+        let mut rng = rand::thread_rng();
+
+        let images = Image::get_all(conn).unwrap();
+        if images.is_empty() {
+            return None;
+        }
+        let index = (0..images.len()).choose(&mut rng).unwrap();
+
+        Some(images[index])
     }
 }
 

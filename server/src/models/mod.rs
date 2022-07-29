@@ -7,6 +7,10 @@ use diesel::PgConnection;
 
 use self::schema::{artist, image, song};
 
+pub use self::artists::Artist;
+pub use self::images::Image;
+pub use self::songs::Song;
+
 /// represent database result
 pub enum DatabaseResult<T> {
     Successful(T),
