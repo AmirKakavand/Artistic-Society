@@ -92,13 +92,13 @@ impl Image {
         use rand::seq::IteratorRandom;
         let mut rng = rand::thread_rng();
 
-        let images = Image::get_all(conn).unwrap();
+        let mut images = Image::get_all(conn).unwrap();
         if images.is_empty() {
             return None;
         }
         let index = (0..images.len()).choose(&mut rng).unwrap();
 
-        Some(images[index])
+        Some(images.remove(index))
     }
 }
 

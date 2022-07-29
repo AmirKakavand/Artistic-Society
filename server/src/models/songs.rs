@@ -89,13 +89,13 @@ impl Song {
         use rand::seq::IteratorRandom;
         let mut rng = rand::thread_rng();
 
-        let songs = Song::get_all(conn).unwrap();
+        let mut songs = Song::get_all(conn).unwrap();
         if songs.is_empty() {
             return None;
         }
         let index = (0..songs.len()).choose(&mut rng).unwrap();
 
-        Some(songs[index])
+        Some(songs.remove(index))
     }
 }
 
